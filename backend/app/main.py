@@ -20,10 +20,13 @@ app = FastAPI(
     openapi_url="/openapi.json",
 )
 
-# CORS: only the configured origins (Vite dev server, Netlify site) may call us.
+# CORS: the explicit list (Vite dev server + any configured origins) PLUS a regex
+# that allows any *.netlify.app site. The regex makes deploys robust to the exact
+# site name / trailing-slash mistakes that otherwise cause silent CORS failures.
 app.add_middleware(
     CORSMiddleware,
     allow_origins=settings.BACKEND_CORS_ORIGINS,
+    allow_origin_regex=r"https://([a-z0-9-]+\.)*netlify\.app",
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],

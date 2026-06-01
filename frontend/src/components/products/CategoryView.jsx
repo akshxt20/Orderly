@@ -119,7 +119,7 @@ export function CategoryView({ products, onEdit, onDelete, onSelect, onOrder }) 
             >
               <div className="overflow-hidden">
                 <div className="p-5">
-                  <div className="grid grid-cols-2 gap-3 sm:gap-4 lg:grid-cols-3 xl:grid-cols-4 animate-fade-in">
+                  <div className="grid auto-rows-fr grid-cols-2 gap-3 sm:gap-4 lg:grid-cols-3 xl:grid-cols-4 animate-fade-in">
                     {items.map((product) => (
                       <CategoryProductCard
                         key={product.id}

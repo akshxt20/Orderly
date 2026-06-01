@@ -76,8 +76,9 @@ export function ProductCard({ product, onEdit, onDelete, onSelect, onOrder }) {
         {/* Desktop-only stock */}
         <p className="hidden sm:block mt-1 text-xs text-neutral-400">{product.quantity} in stock</p>
 
-        {/* Action area: 'Order' button on mobile, Edit/Delete on desktop */}
-        <div className="mt-3 sm:mt-4">
+        {/* Action area: pinned to the bottom (mt-auto) so buttons line up across
+            cards regardless of whether a sale badge is present above. */}
+        <div className="mt-auto pt-3 sm:pt-4">
           {/* Mobile Order Button */}
           <div className="block sm:hidden">
             <Button

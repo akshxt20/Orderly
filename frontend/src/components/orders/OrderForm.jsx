@@ -98,7 +98,7 @@ export function OrderForm({ initialProductId = "", onSubmit, onCancel, submittin
 
             return (
               <div key={field.id} className="flex items-start gap-2">
-                <div className="flex-1">
+                <div className="min-w-0 flex-1">
                   <Select
                     {...register(`items.${index}.product_id`)}
                     error={errors.items?.[index]?.product_id}
@@ -122,7 +122,7 @@ export function OrderForm({ initialProductId = "", onSubmit, onCancel, submittin
                   )}
                 </div>
 
-                <div className="w-20">
+                <div className="w-16 shrink-0">
                   <Input
                     type="number"
                     min="1"
@@ -131,7 +131,7 @@ export function OrderForm({ initialProductId = "", onSubmit, onCancel, submittin
                   />
                 </div>
 
-                <div className="w-28 pt-2.5 text-right text-sm text-neutral-600">
+                <div className="hidden w-28 shrink-0 pt-2.5 text-right text-sm text-neutral-600 sm:block">
                   {selected ? formatCurrency(priceOf(selected) * quantity) : "—"}
                 </div>
 

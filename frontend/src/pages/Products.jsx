@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useSearchParams } from "react-router-dom";
 
 import { CategoryView } from "@/components/products/CategoryView";
 import { ProductCard } from "@/components/products/ProductCard";
@@ -53,6 +53,9 @@ function PriceCell({ product }) {
 
 export default function Products() {
   const navigate = useNavigate();
+  // "?stock=low" (e.g. from the dashboard) shows only low-stock products.
+  const [searchParams, setSearchParams] = useSearchParams();
+  const lowStockOnly = searchParams.get("stock") === "low";
   const [page, setPage] = useState(1);
   const [search, setSearch] = useState("");
   const [sort, setSort] = useState("newest");
@@ -68,6 +71,7 @@ export default function Products() {
   const params = { page, limit: PAGE_SIZE, ...SORT_OPTIONS[sort] };
   if (debouncedSearch) params.search = debouncedSearch;
   if (categoryFilter) params.category = categoryFilter;
+  if (lowStockOnly) params.low_stock = true;
 
   const { data, isLoading } = useProducts(params);
   const { data: dynamicCategories } = useCategories();
@@ -92,6 +96,12 @@ export default function Products() {
 
   const handleCategoryFilter = (value) => {
     setCategoryFilter(value);
+    setPage(1);
+  };
+
+  const clearLowStock = () => {
+    searchParams.delete("stock");
+    setSearchParams(searchParams, { replace: true });
     setPage(1);
   };
 
@@ -148,9 +158,19 @@ export default function Products() {
 
   const emptyState = (
     <EmptyState
-      title={debouncedSearch ? "No matching products" : "No products yet"}
-      description={debouncedSearch ? "Try a different search term." : "Add your first product to get started."}
-      action={!debouncedSearch && <Button onClick={() => setEditing("new")}>+ Add product</Button>}
+      title={lowStockOnly ? "All stocked up" : debouncedSearch ? "No matching products" : "No products yet"}
+      description={
+        lowStockOnly
+          ? "No products are below the low-stock level right now."
+          : debouncedSearch
+            ? "Try a different search term."
+            : "Add your first product to get started."
+      }
+      action={
+        !debouncedSearch && !lowStockOnly && (
+          <Button onClick={() => setEditing("new")}>+ Add product</Button>
+        )
+      }
     />
   );
 
@@ -192,6 +212,24 @@ export default function Products() {
         </Select>
         <ViewToggle view={view} onChange={setView} />
       </div>
+
+      {/* Low-stock filter banner (arrives via ?stock=low from the dashboard) */}
+      {lowStockOnly && (
+        <div className="mb-4 flex items-center justify-between gap-3 rounded-lg border border-amber-200 bg-amber-50 px-4 py-2.5">
+          <div className="flex items-center gap-2 text-sm text-amber-800">
+            <svg viewBox="0 0 24 24" className="h-4 w-4 shrink-0" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+              <path d="M10.29 3.86 1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0ZM12 9v4M12 17h.01" />
+            </svg>
+            <span className="font-medium">Showing low-stock items only</span>
+          </div>
+          <button
+            onClick={clearLowStock}
+            className="shrink-0 rounded-md px-2 py-1 text-xs font-medium text-amber-700 transition-colors hover:bg-amber-100"
+          >
+            Clear
+          </button>
+        </div>
+      )}
 
       {/* Active category filter chip */}
       {categoryFilter && (

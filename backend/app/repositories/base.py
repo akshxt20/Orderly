@@ -17,6 +17,7 @@ from sqlalchemy import asc, desc, func, or_, select
 from sqlalchemy.orm import Session
 
 from app.db.base import Base
+from app.models.product import LOW_STOCK_LEVEL
 
 ModelType = TypeVar("ModelType", bound=Base)
 
@@ -44,12 +45,15 @@ class BaseRepository(Generic[ModelType]):
         sort_by: str | None = None,
         sort_dir: str = "desc",
         category: str | None = None,
+        low_stock: bool = False,
     ) -> tuple[Sequence[ModelType], int]:
         """Return (rows for the page, total matching rows)."""
         stmt = select(self.model)
         stmt = self._apply_search(stmt, search)
         if category and hasattr(self.model, "category"):
             stmt = stmt.where(self.model.category == category)
+        if low_stock and hasattr(self.model, "quantity"):
+            stmt = stmt.where(self.model.quantity < LOW_STOCK_LEVEL)
 
         # Total is computed against the filtered query (before pagination) so the
         # client can render correct page counts.

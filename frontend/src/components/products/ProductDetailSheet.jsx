@@ -148,6 +148,15 @@ export function ProductDetailSheet({ product, open, onClose, onEdit, onDelete, o
                 </span>
               )}
             </div>
+
+            {product.on_sale && product.sale_name && (
+              <span className="mt-2.5 inline-flex w-fit items-center gap-1.5 rounded-full bg-gradient-to-r from-fuchsia-600 via-pink-600 to-amber-500 px-3 py-1 text-xs font-semibold text-white shadow-sm">
+                <svg viewBox="0 0 24 24" className="h-3.5 w-3.5" fill="currentColor">
+                  <path d="M12 2 9.1 8.6 2 9.2l5.4 4.7L5.8 21 12 17.3 18.2 21l-1.6-7.1L22 9.2l-7.1-.6z" />
+                </svg>
+                {product.sale_name}
+              </span>
+            )}
           </div>
 
           {/* Stock detail */}

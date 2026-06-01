@@ -82,6 +82,7 @@ class ProductOut(BaseModel):
     discount_percent: Decimal = Decimal("0")
     effective_price: Decimal
     on_sale: bool = False
+    sale_name: str | None = None  # name of the applied offer, when on sale
 
     @computed_field  # derived flag so the UI doesn't re-implement the rule
     @property

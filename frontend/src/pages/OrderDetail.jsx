@@ -74,7 +74,8 @@ export default function OrderDetail() {
           <header className="border-b border-neutral-200 px-5 py-4">
             <h2 className="text-sm font-semibold text-neutral-900">Items</h2>
           </header>
-          <table className="w-full text-sm">
+          <div className="overflow-x-auto">
+          <table className="w-full min-w-[460px] text-sm">
             <thead>
               <tr className="border-b border-neutral-100 text-left text-xs uppercase tracking-wide text-neutral-500">
                 <th className="px-5 py-3 font-semibold">Product</th>
@@ -109,6 +110,7 @@ export default function OrderDetail() {
               </tr>
             </tfoot>
           </table>
+          </div>
         </section>
 
         {/* Customer + notes */}

@@ -14,12 +14,9 @@ const schema = z.object({
   name: z.string().trim().min(1, "Name is required").max(255),
   category: z.string().min(1, "Category is required").max(50),
   customCategory: z.string().trim().max(50).optional(),
-  image_url: z
-    .string()
-    .trim()
-    .url("Enter a valid URL")
-    .or(z.literal(""))
-    .optional(),
+  // Any string is accepted — a broken/invalid link simply falls back to the
+  // product's coloured initial at display time, so no validation error here.
+  image_url: z.string().trim().max(500).optional(),
   description: z.string().max(2000).optional(),
   price: z.coerce.number({ invalid_type_error: "Enter a price" }).min(0, "Cannot be negative"),
   quantity: z.coerce
@@ -111,7 +108,7 @@ export function ProductForm({ defaultValues, onSubmit, onCancel, submitting, mod
         </Field>
       )}
 
-      <Field label="Image URL" hint="Paste a link to a product image" error={errors.image_url?.message}>
+      <Field label="Image URL" hint="Optional — a broken link falls back to the product's initial" error={errors.image_url?.message}>
         <Input {...register("image_url")} error={errors.image_url} placeholder="https://…" />
       </Field>
 

@@ -1,6 +1,6 @@
 import { cn } from "@/utils/cn";
 
-export function StatCard({ label, value, hint, icon, loading = false, gradient, iconBg }) {
+export function StatCard({ label, value, hint, icon, loading = false, gradient, iconBg, className }) {
   // When a gradient is provided, render the premium gradient variant
   if (gradient) {
     return (
@@ -8,6 +8,7 @@ export function StatCard({ label, value, hint, icon, loading = false, gradient, 
         className={cn(
           "group relative overflow-hidden rounded-2xl p-5 transition-all duration-300 hover:-translate-y-0.5 hover:shadow-xl",
           `bg-gradient-to-br ${gradient}`,
+          className,
         )}
       >
         {/* Decorative shapes */}
@@ -36,7 +37,7 @@ export function StatCard({ label, value, hint, icon, loading = false, gradient, 
 
   // Original flat style as fallback
   return (
-    <div className="rounded-xl border border-neutral-200 bg-white p-5 transition-shadow hover:shadow-sm">
+    <div className={cn("rounded-xl border border-neutral-200 bg-white p-5 transition-shadow hover:shadow-sm", className)}>
       <div className="flex items-center justify-between">
         <span className="text-sm font-medium text-neutral-500">{label}</span>
         {icon && <span className="text-neutral-400">{icon}</span>}

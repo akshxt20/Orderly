@@ -58,6 +58,9 @@ const STAT_CONFIG = [
     gradient: "from-emerald-500 via-green-600 to-teal-700",
     // Indian rupee (₹) glyph — two top bars, the loop, and the diagonal leg.
     icon: "M6 3h12M6 8h12M6 13h3M9 13c6 0 6-10 0-10M6 13l8 8",
+    // Spans the leftover column so the last row has no empty gap (it's the 5th
+    // card in a 2- and 3-column grid). Resets to a single column at xl (5 cols).
+    cardClass: "col-span-2 xl:col-span-1",
   },
 ];
 
@@ -100,6 +103,7 @@ export default function Dashboard() {
             loading={isLoading}
             gradient={stat.gradient}
             icon={<StatIcon path={stat.icon} />}
+            className={stat.cardClass}
           />
         ))}
       </div>
@@ -173,8 +177,8 @@ export default function Dashboard() {
                 </div>
                 <h2 className="text-sm font-semibold text-neutral-900">Low stock</h2>
               </div>
-              <Link to="/products" className="rounded-lg bg-neutral-900/5 px-3 py-1.5 text-xs font-medium text-neutral-600 transition-colors hover:bg-neutral-900/10 hover:text-neutral-900">
-                Manage →
+              <Link to="/products?stock=low" className="rounded-lg bg-neutral-900/5 px-3 py-1.5 text-xs font-medium text-neutral-600 transition-colors hover:bg-neutral-900/10 hover:text-neutral-900">
+                View all →
               </Link>
             </div>
           </header>
@@ -184,12 +188,17 @@ export default function Dashboard() {
           ) : data?.low_stock_products?.length ? (
             <ul className="divide-y divide-neutral-100">
               {data.low_stock_products.map((product) => (
-                <li key={product.id} className="flex items-center justify-between px-6 py-4 transition-colors hover:bg-neutral-50/50">
-                  <div className="min-w-0">
-                    <p className="truncate text-sm font-medium text-neutral-900">{product.name}</p>
-                    <p className="text-xs text-neutral-400">{product.sku}</p>
-                  </div>
-                  <Badge variant="warning">{product.quantity} left</Badge>
+                <li key={product.id}>
+                  <Link
+                    to="/products?stock=low"
+                    className="flex items-center justify-between px-6 py-4 transition-colors hover:bg-neutral-50/50"
+                  >
+                    <div className="min-w-0">
+                      <p className="truncate text-sm font-medium text-neutral-900">{product.name}</p>
+                      <p className="text-xs text-neutral-400">{product.sku}</p>
+                    </div>
+                    <Badge variant="warning">{product.quantity} left</Badge>
+                  </Link>
                 </li>
               ))}
             </ul>

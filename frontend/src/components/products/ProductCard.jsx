@@ -63,6 +63,16 @@ export function ProductCard({ product, onEdit, onDelete, onSelect, onOrder }) {
           )}
         </div>
 
+        {/* Sale name — colourful gradient pill, shown only when on offer */}
+        {product.on_sale && product.sale_name && (
+          <span className="mt-1.5 inline-flex w-fit max-w-full items-center gap-1 rounded-full bg-gradient-to-r from-fuchsia-600 via-pink-600 to-amber-500 px-2 py-0.5 text-[10px] font-semibold text-white shadow-sm">
+            <svg viewBox="0 0 24 24" className="h-2.5 w-2.5 shrink-0" fill="currentColor">
+              <path d="M12 2 9.1 8.6 2 9.2l5.4 4.7L5.8 21 12 17.3 18.2 21l-1.6-7.1L22 9.2l-7.1-.6z" />
+            </svg>
+            <span className="truncate">{product.sale_name}</span>
+          </span>
+        )}
+
         {/* Desktop-only stock */}
         <p className="hidden sm:block mt-1 text-xs text-neutral-400">{product.quantity} in stock</p>
 

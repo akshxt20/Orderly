@@ -25,6 +25,7 @@ def list_products(
     sort_by: str | None = Query(None),
     sort_dir: SortDir = "desc",
     category: str | None = Query(None, description="Filter by product category"),
+    low_stock: bool = Query(False, description="Only products below the low-stock level"),
 ):
     rows, total = service.list(
         page=page.page,
@@ -33,6 +34,7 @@ def list_products(
         sort_by=sort_by,
         sort_dir=sort_dir,
         category=category,
+        low_stock=low_stock,
     )
     return {"data": rows, "meta": build_meta(total, page.page, page.limit)}
 

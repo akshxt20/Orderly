@@ -1,0 +1,49 @@
+# Local development stack: PostgreSQL + the FastAPI backend.
+# The frontend is added in a later phase; for now this brings up a fully working
+# API against a real database with one command:  docker compose up --build
+#
+# Values come from a root .env (see .env.example); the defaults after :- let it
+# run even before you create one.
+
+services:
+  db:
+    image: postgres:16-alpine
+    container_name: orderly_db
+    environment:
+      POSTGRES_USER: ${POSTGRES_USER:-orderly}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-orderly}
+      POSTGRES_DB: ${POSTGRES_DB:-orderly}
+    volumes:
+      # Named volume = data survives `docker compose down` (but not `down -v`).
+      - orderly_pgdata:/var/lib/postgresql/data
+    ports:
+      - "5432:5432"
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U ${POSTGRES_USER:-orderly} -d ${POSTGRES_DB:-orderly}"]
+      interval: 5s
+      timeout: 5s
+      retries: 10
+
+  backend:
+    build: ./backend
+    container_name: orderly_backend
+    environment:
+      DATABASE_URL: postgresql+psycopg2://${POSTGRES_USER:-orderly}:${POSTGRES_PASSWORD:-orderly}@db:5432/${POSTGRES_DB:-orderly}
+      BACKEND_CORS_ORIGINS: ${BACKEND_CORS_ORIGINS:-http://localhost:5173}
+      SQL_ECHO: ${SQL_ECHO:-false}
+      PORT: 8000
+    depends_on:
+      db:
+        # Don't start the API until Postgres reports healthy.
+        condition: service_healthy
+    ports:
+      - "8000:8000"
+    healthcheck:
+      test: ["CMD-SHELL", "python -c \"import urllib.request; urllib.request.urlopen('http://localhost:8000/health')\""]
+      interval: 15s
+      timeout: 5s
+      retries: 5
+      start_period: 20s
+
+volumes:
+  orderly_pgdata:

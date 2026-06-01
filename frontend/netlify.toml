@@ -1,0 +1,17 @@
+# Netlify build config for the React (Vite) frontend.
+# In the Netlify UI, set "Base directory" to: frontend
+# VITE_API_URL must be set in the Netlify dashboard (Site settings → Environment).
+
+[build]
+  command = "npm run build"
+  publish = "dist"
+
+[build.environment]
+  NODE_VERSION = "20"
+
+# SPA fallback: every route is served by index.html so client-side routing
+# (e.g. /orders/123) works on refresh and direct links.
+[[redirects]]
+  from = "/*"
+  to = "/index.html"
+  status = 200

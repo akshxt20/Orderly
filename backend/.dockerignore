@@ -1,0 +1,18 @@
+# Keep the build context (and final image) lean and secret-free.
+__pycache__/
+*.py[cod]
+*.egg-info/
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
+
+# Never ship local secrets or virtualenvs.
+.env
+.venv/
+venv/
+
+.git/
+.gitignore
+*.md
+.vscode/
+.idea/

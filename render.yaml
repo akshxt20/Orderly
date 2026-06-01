@@ -1,0 +1,27 @@
+# Render Blueprint — provisions the API and a managed PostgreSQL in one step.
+# In Render: New + → Blueprint → pick this repo. Then set BACKEND_CORS_ORIGINS
+# (the Netlify URL) when prompted, since it isn't known until the site exists.
+
+databases:
+  - name: orderly-db
+    databaseName: orderly
+    user: orderly
+    plan: free
+
+services:
+  - type: web
+    name: orderly-api
+    runtime: docker
+    dockerfilePath: ./backend/Dockerfile
+    dockerContext: ./backend
+    plan: free
+    healthCheckPath: /health
+    envVars:
+      - key: DATABASE_URL
+        fromDatabase:
+          name: orderly-db
+          property: connectionString
+      - key: BACKEND_CORS_ORIGINS
+        sync: false # set this to your Netlify URL in the dashboard
+      - key: SQL_ECHO
+        value: "false"

@@ -30,30 +30,35 @@ const STAT_CONFIG = [
   {
     label: "Total Products",
     key: "total_products",
+    to: "/products",
     gradient: "from-blue-600 via-blue-700 to-indigo-800",
     icon: "m21 16-9 5-9-5V8l9-5 9 5v8ZM3.3 7 12 12l8.7-5M12 22V12",
   },
   {
     label: "Total Customers",
     key: "total_customers",
+    to: "/customers",
     gradient: "from-violet-600 via-purple-700 to-fuchsia-800",
     icon: "M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2M9 11a4 4 0 1 0 0-8 4 4 0 0 0 0 8Zm13 10v-2a4 4 0 0 0-3-3.87M16 3.13A4 4 0 0 1 16 11",
   },
   {
     label: "Total Orders",
     key: "total_orders",
+    to: "/orders",
     gradient: "from-rose-500 via-pink-600 to-fuchsia-700",
     icon: "M6 2 3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4H6ZM3 6h18M16 10a4 4 0 0 1-8 0",
   },
   {
     label: "Active Sales",
     key: "active_sales",
+    to: "/sales",
     gradient: "from-amber-500 via-orange-500 to-red-500",
     icon: "M9 14 4 9l1.5-1.5L9 11l9.5-9.5L20 3 9 14ZM20 12v7a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2v-7",
   },
   {
     label: "Total Revenue",
     key: "total_revenue",
+    to: "/orders",
     format: true,
     gradient: "from-emerald-500 via-green-600 to-teal-700",
     // Indian rupee (₹) glyph — two top bars, the loop, and the diagonal leg.
@@ -90,21 +95,22 @@ export default function Dashboard() {
       {/* Stat cards — each with a unique gradient */}
       <div className="grid grid-cols-2 gap-3 sm:gap-4 lg:grid-cols-3 xl:grid-cols-5">
         {STAT_CONFIG.map((stat) => (
-          <StatCard
-            key={stat.label}
-            label={stat.label}
-            value={
-              data
-                ? stat.format
-                  ? formatCurrencyWhole(data[stat.key])
-                  : data[stat.key]
-                : undefined
-            }
-            loading={isLoading}
-            gradient={stat.gradient}
-            icon={<StatIcon path={stat.icon} />}
-            className={stat.cardClass}
-          />
+          <Link key={stat.label} to={stat.to} className={stat.cardClass}>
+            <StatCard
+              label={stat.label}
+              value={
+                data
+                  ? stat.format
+                    ? formatCurrencyWhole(data[stat.key])
+                    : data[stat.key]
+                  : undefined
+              }
+              loading={isLoading}
+              gradient={stat.gradient}
+              icon={<StatIcon path={stat.icon} />}
+              className="h-full"
+            />
+          </Link>
         ))}
       </div>
 

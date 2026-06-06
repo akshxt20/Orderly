@@ -58,7 +58,6 @@ const STAT_CONFIG = [
   {
     label: "Total Revenue",
     key: "total_revenue",
-    to: "/orders",
     format: true,
     gradient: "from-emerald-500 via-green-600 to-teal-700",
     // Indian rupee (₹) glyph — two top bars, the loop, and the diagonal leg.
@@ -94,8 +93,8 @@ export default function Dashboard() {
 
       {/* Stat cards — each with a unique gradient */}
       <div className="grid grid-cols-2 gap-3 sm:gap-4 lg:grid-cols-3 xl:grid-cols-5">
-        {STAT_CONFIG.map((stat) => (
-          <Link key={stat.label} to={stat.to} className={stat.cardClass}>
+        {STAT_CONFIG.map((stat) => {
+          const card = (
             <StatCard
               label={stat.label}
               value={
@@ -110,8 +109,18 @@ export default function Dashboard() {
               icon={<StatIcon path={stat.icon} />}
               className="h-full"
             />
-          </Link>
-        ))}
+          );
+          // Revenue card is non-clickable; the rest navigate to their page.
+          return stat.to ? (
+            <Link key={stat.label} to={stat.to} className={stat.cardClass}>
+              {card}
+            </Link>
+          ) : (
+            <div key={stat.label} className={stat.cardClass}>
+              {card}
+            </div>
+          );
+        })}
       </div>
 
       <div className="mt-8 grid grid-cols-1 gap-6 lg:grid-cols-3">
